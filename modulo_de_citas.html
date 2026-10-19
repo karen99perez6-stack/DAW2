@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Citas - Salón de Belleza</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            margin: 0;
+            padding: 0;
+        }
+        .container { 
+            max-width: 600px; 
+            margin: 40px auto; 
+            background: #ffffff; 
+            padding: 30px; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); 
+        }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; }
+        .form-control { width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 6px; box-sizing: border-box; }
+        .btn-primary { background-color: #2563eb; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: 600; }
+        .btn-primary:hover { background-color: #1d4ed8; }
+    </style>
+</head>
+<body>
+
+    <!-- Barra de navegación -->
+<nav style="background: #0f172a; padding: 15px; text-align: center;">
+    <a href="index.html" 
+       style="color: white; margin-right: 20px; text-decoration: none; font-family: 'Inter';">
+       📊 Panel de Reportes
+    </a>
+    <a href="citas.html" 
+       style="color: white; text-decoration: none; font-family: 'Inter';">
+       📅 Agendar Cita
+    </a>
+</nav>
+
+
+    <div class="container">
+        <h2>Reservar Cita - Salón de Belleza</h2>
+    
+        <form id="formCitas">
+            <div class="form-group">
+                <label for="nombre">Nombre del Cliente</label>
+                <input type="text" id="nombre" class="form-control" placeholder="Ej. Juan Cortez">
+            </div>
+            <div class="form-group">
+                <label for="telefono">Teléfono</label>
+                <input type="tel" id="telefono" class="form-control" placeholder="Ej. 22223333">
+            </div>
+            <div class="form-group">
+                <label for="servicio">Servicio</label>
+                <select id="servicio" class="form-control">
+                    <option value="">Seleccione un servicio...</option>
+                    <option value="Corte de Cabello">Limpieza facial</option>
+                    <option value="Tinte / Luces">Tinte / Mechas</option>
+                    <option value="Manicura / Pedicura">Manicure / Pedicure</option>
+                     <option value="Manicura / Pedicura">Depilación</option>
+                </select>
+            </div>
+            <!-- NUEVOS CAMPOS -->
+            <div class="form-group">
+                <label for="fecha">Fecha de la Cita</label>
+                <input type="date" id="fecha" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="hora">Hora de la Cita</label>
+                <input type="time" id="hora" class="form-control">
+            </div>
+            <button type="submit" class="btn-primary">Agendar Cita</button>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const formulario = document.getElementById("formCitas");
+
+            formulario.addEventListener("submit", (e) => {
+                e.preventDefault();
+
+                const nombre = document.getElementById("nombre").value.trim();
+                const telefono = document.getElementById("telefono").value.trim();
+                const servicio = document.getElementById("servicio").value;
+                const fecha = document.getElementById("fecha").value;
+                const hora = document.getElementById("hora").value;
+
+                if (nombre === "" || telefono === "" || servicio === "" || fecha === "" || hora === "") {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Campos incompletos',
+                        text: 'Por favor, llena todos los espacios del formulario antes de continuar.',
+                        confirmButtonColor: '#2563eb'
+                    });
+                    return;
+                }
+
+                const regexTelefono = /^[0-9]{8}$/;
+                if (!regexTelefono.test(telefono)) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Teléfono inválido',
+                        text: 'Ingresa un número de teléfono válido de 8 dígitos.',
+                        confirmButtonColor: '#2563eb'
+                    });
+                    return;
+                }
+
+                const hoy = new Date();
+                const fechaSeleccionada = new Date(fecha + "T" + hora);
+                if (fechaSeleccionada < hoy) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Fecha inválida',
+                        text: 'No puedes agendar citas en fechas pasadas.',
+                        confirmButtonColor: '#2563eb'
+                    });
+                    return;
+                }
+
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Cita Agendada!',
+                    text: `La cita para ${nombre} ha sido registrada exitosamente para el servicio de ${servicio} el día ${fecha} a las ${hora}.`,
+                    confirmButtonColor: '#2563eb',
+                    confirmButtonText: 'Aceptar'
+                });
+
+                formulario.reset();
+            });
+        });
+    </script>
+    
+</body>
+</html>
